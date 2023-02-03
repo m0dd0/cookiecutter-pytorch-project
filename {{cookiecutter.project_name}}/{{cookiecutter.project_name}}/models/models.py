@@ -7,11 +7,11 @@ from torchtyping import TensorType
 from .custom_modules import CustomModuleExample
 
 
-class {{cookiecutter.network_name}}(nn.Module):
+class {{cookiecutter.model_name}}(nn.Module):
     @classmethod
     def from_state_dict_path(
         cls, model_path: Path = None, device: str = None
-    ) -> "{{cookiecutter.network_name}}":
+    ) -> "{{cookiecutter.mode_name}}":
         if device is None:
             device = (
                 torch.device("cuda")

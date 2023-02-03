@@ -3,8 +3,8 @@ import setuptools
 setuptools.setup(
     name="{{cookiecutter.project_name}}",
     version="0.0.1",
-    author="Moritz Hesche",
-    author_email="mo.hesche@gmail.com",
+    author="{{cookiecutter.author}}",
+    author_email="{{cookiecutter.email}}",
     # description="",
     # long_description=long_description,
     # long_description_content_type="text/markdown",

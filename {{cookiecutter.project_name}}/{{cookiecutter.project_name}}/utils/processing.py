@@ -11,13 +11,13 @@ import torch
 from {{cookiecutter.project_name}}.datatypes import DatasetSample
 from {{cookiecutter.project_name}}.preprocessing import PreprocessorBase, {{cookiecutter.dataset_name}}Preprocessor
 from {{cookiecutter.project_name}}.postprocessing import PostprocessorBase, Postprocessor
-from {{cookiecutter.project_name}}.models import {{cookiecutter.network_name}}
+from {{cookiecutter.project_name}}.models import {{cookiecutter.model_name}}
 
 
 class End2EndProcessor:
     def __init__(
         self,
-        model: {{cookiecutter.network_name}} = None,
+        model: {{cookiecutter.model_name}} = None,
         preprocessor: PreprocessorBase = None,
         postprocessor: PostprocessorBase = None,
         # more converters here
