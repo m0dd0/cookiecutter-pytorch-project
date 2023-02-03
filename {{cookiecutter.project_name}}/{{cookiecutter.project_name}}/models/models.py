@@ -11,7 +11,7 @@ class {{cookiecutter.model_name}}(nn.Module):
     @classmethod
     def from_state_dict_path(
         cls, model_path: Path = None, device: str = None
-    ) -> "{{cookiecutter.mode_name}}":
+    ) -> "{{cookiecutter.model_name}}":
         if device is None:
             device = (
                 torch.device("cuda")

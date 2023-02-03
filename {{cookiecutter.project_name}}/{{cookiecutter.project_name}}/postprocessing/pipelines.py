@@ -29,7 +29,7 @@ from typing import Any, Dict
 # import numpy as np
 from torchtyping import TensorType
 
-from {{cookiecutter.project_name}}.datatypes import ResultBase(ABC), SomeResult
+from {{cookiecutter.project_name}}.datatypes import ResultBase, SomeResult
 from . import custom_transforms as CT
 
 
