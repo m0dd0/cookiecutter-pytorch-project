@@ -1,3 +1,6 @@
+"""This modules contains utilities to export the different data created during processing
+to disk. Its main compoennt is the exporter class that can be used to export data to disk."""
+
 from typing import Any, Dict, Union
 from pathlib import Path
 import json
