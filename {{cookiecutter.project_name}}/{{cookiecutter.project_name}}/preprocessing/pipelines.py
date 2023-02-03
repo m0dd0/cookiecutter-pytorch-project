@@ -34,7 +34,7 @@ class PreprocessorBase(ABC):
         self.intermediate_results: Dict[str, Any] = {}
 
     @abstractmethod
-    def __call__(self, sample: DatasetSample) -> TensorType:
+    def __call__(self, sample: DatasetSample) -> TensorType["batch", ...]:
         pass
 
 
@@ -51,7 +51,7 @@ class {{cookiecutter.dataset_name}}Preprocessor(PreprocessorBase):
         # self.example_submodule = CT.ExampleSubmodule()
         # self.example_submodule_2 = CT.ExampleSubmodule()
 
-    def __call__(self, sample: {{cookiecutter.dataset_name}}Sample) -> TensorType:
+    def __call__(self, sample: {{cookiecutter.dataset_name}}Sample) -> TensorType["batch", ...]:
         # TODO implement preprocessing pipeline
         # network_input = self.example_submodule(sample)
         # if self.do_something:
