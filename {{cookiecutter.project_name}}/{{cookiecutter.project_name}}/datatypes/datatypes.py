@@ -13,7 +13,7 @@ from abc import ABC
 
 @dataclass
 class DatasetSample(ABC):
-    pass
+    name: str
 
 
 @dataclass
