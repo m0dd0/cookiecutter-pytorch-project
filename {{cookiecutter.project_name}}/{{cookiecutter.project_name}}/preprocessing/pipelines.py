@@ -43,13 +43,13 @@ class {{cookiecutter.dataset_name}}Preprocessor(PreprocessorBase):
         super().__init__()
     
         # configration
-        # self.do_something = True
         # TODO add configuration options here
+        # self.do_something = True
 
         # submodules
+        # TODO add submodules here
         # self.example_submodule = CT.ExampleSubmodule()
         # self.example_submodule_2 = CT.ExampleSubmodule()
-        # TODO add submodules here
 
     def __call__(self, sample: {{cookiecutter.dataset_name}}Sample) -> TensorType:
         # TODO implement preprocessing pipeline
