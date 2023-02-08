@@ -12,19 +12,10 @@ class {{cookiecutter.model_name}}(nn.Module):
     def from_state_dict_path(
         cls, model_path: Path = None, device: str = None
     ) -> "{{cookiecutter.model_name}}":
-        if device is None:
-            device = (
-                torch.device("cuda")
-                if torch.cuda.is_available()
-                else torch.device("cpu")
-            )
-
-        if model_path is None:
-            model_path = (
-                Path(__file__).parent.parent
-                / "checkpoints"
-                / "default_weights.pt"
-            )
+        device = device or (
+            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        )
+        model_path = model_path or Path(__file__).parent.parent / "checkpoints" / "default_weights.pt"
 
         model = cls()
         model.load_state_dict(torch.jit.load(model_path).state_dict())

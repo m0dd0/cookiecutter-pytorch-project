@@ -22,17 +22,10 @@ class End2EndProcessor:
         postprocessor: PostprocessorBase = None,
         # more converters here
     ):
-        if model is None:
-            model = GenerativeResnet.from_state_dict_path()
-        self.model = model
+        self.model = model or {{cookiecutter.model_name}}.from_state_dict_path()
 
-        if preprocessor is None:
-            preprocessor = Preprocessor()
-        self.preprocessor = preprocessor
-
-        if postprocessor is None:
-            postprocessor = Postprocessor()
-        self.postprocessor = postprocessor
+        self.preprocessor = preprocessor or {{cookiecutter.dataset_name}}Preprocessor
+        self.postprocessor = postprocessor or Postprocessor()
 
         # more converters here
 
