@@ -10,7 +10,9 @@ For clarity it should be avoided to have logic inthe pipeline itself. Instead th
 should be implemented in the submodules. The pipeline itself should only manage the
 flow of information through the submodules. If a pipeline has no or only a single
 submodule it might be more suitable to implement it as a submodule instead of a pipeline
-for improved reusability.
+for improved reusability. It is also good practice to have the pipeline accept (multiple)
+submodules as arguments. This way the pipeline can be used with different submodules
+which increases modularity.
 Somteimes it might be useful to have a subpipeline that is used in multiple pipelines.
 This subpipeline will output an intermediate result that is used in multiple pipelines
 but not the final result. Therefore this pipeline should not inherit from PreprocessorBase.
@@ -39,25 +41,27 @@ class PreprocessorBase(ABC):
 
 
 class {{cookiecutter.dataset_name}}Preprocessor(PreprocessorBase):
-    def __init__(self):
+    def __init__(
+        self, 
+        # submodule_1: CT.ExampleSubmodule = None, 
+        # submodule_2: CT.ExampleSubmodule = None
+    ):
         super().__init__()
     
-        # configration
-        # TODO add configuration options here
-        # self.do_something = True
-
         # submodules
         # TODO add submodules here
-        # self.example_submodule = CT.ExampleSubmodule()
-        # self.example_submodule_2 = CT.ExampleSubmodule()
+        # self.example_submodule_1 = exmaple_submodule_1
+        # self.example_submodule_2 = exmaple_submodule_2
 
     def __call__(self, sample: {{cookiecutter.dataset_name}}Sample) -> TensorType["batch", ...]:
         # TODO implement preprocessing pipeline
-        # network_input = self.example_submodule(sample)
-        # if self.do_something:
-        #     network_input = self.example_submodule_2(network_input)
+        # x = network_input
+        # if self.example_submodule_1 is not None:
+        #     x = self.example_submodule_2(x)
+        # if self.example_submodule_2 is not None:
+        #     x = self.example_submodule_2(x)
+        # return x
         raise NotImplementedError()
-        return network_input
 
 
 # other preprocessors for other datasets or with completely different preprocessing pipelines ...
