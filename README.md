@@ -29,7 +29,7 @@ This cookiecutter provides a template for data intensive projects. It is focusse
     │       ├── processing.py/
     │       └── visualization.py/
     ├── notebooks/
-    │   └── 00_experiments.ipynb/
+    │   └── 00_experiments.ipynb
     ├── .gitignore/
     ├── setup.py/
     ├── LICENSE/
