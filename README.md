@@ -24,10 +24,10 @@ This cookiecutter provides a template for data intensive projects. It is focusse
     │   ├── training/
     │   |   └── dataloaders.py/
     │   └── utils/
-    │   |   ├── export.py/
-    │   |   ├── misc.py/
-    │   |   ├── processing.py/
-    │   |   ├── visualization.py/
+    │       ├── export.py/
+    │       ├── misc.py/
+    │       ├── processing.py/
+    │       └── visualization.py/
     ├── notebooks/
     │   └── 00_experiments.ipynb/
     ├── .gitignore/
