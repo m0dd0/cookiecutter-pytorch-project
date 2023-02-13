@@ -4,3 +4,4 @@ __pycache__
 {{cookiecutter.project_name}}/data/*
 {{cookiecutter.project_name}}/checkpoints/*
 {{cookiecutter.project_name}}/results/*
+notebooks/00_experiments.ipynb
