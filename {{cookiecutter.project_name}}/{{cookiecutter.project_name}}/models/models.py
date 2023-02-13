@@ -8,17 +8,16 @@ from .custom_modules import CustomModuleExample
 
 
 class {{cookiecutter.model_name}}(nn.Module):
-    @classmethod
     def from_state_dict_path(
-        cls, model_path: Path = None, device: str = None, *args, **kwargs
+        cls, state_dict_path: Path = None, device: str = None, *args, **kwargs
     ) -> "{{cookiecutter.model_name}}":
         device = device or (
             torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         )
-        model_path = model_path or Path(__file__).parent.parent / "checkpoints" / "default_weights.pt"
+        model_path = model_path or Path(__file__).parent.parent / "checkpoints" / "default_state_dict.pt"
 
         model = cls(*args, **kwargs)
-        model.load_state_dict(torch.jit.load(model_path).state_dict())
+        model.load_state_dict(torch.load(model_path))
         model.to(device)
 
         return model

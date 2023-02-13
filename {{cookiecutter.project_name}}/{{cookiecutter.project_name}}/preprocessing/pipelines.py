@@ -33,7 +33,11 @@ from . import custom_transforms as CT
 
 class PreprocessorBase(ABC):
     def __init__(self):
-        self.intermediate_results: Dict[str, Any] = {}
+        super().__init__()
+
+    @classmethod
+    def from_config(cls, config: Dict[str, Any]) -> "PreprocessorBase":
+        super().from_config(config, "preprocessing")
 
     @abstractmethod
     def __call__(self, sample: DatasetSample) -> TensorType["batch", ...]:

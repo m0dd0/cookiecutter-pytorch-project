@@ -25,6 +25,7 @@ setuptools.setup(
         "tensorboardX",
         "Pillow",
         "matplotlib",
+        "pyyaml",
     ],
     extras_require={"dev": ["black", "pylint", "jupyter"]},
     include_package_data=True,
