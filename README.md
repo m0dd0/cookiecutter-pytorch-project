@@ -1,4 +1,4 @@
-# DataProjectCookiecutter
+# cookiecutter-data-science-project
 This cookiecutter provides a template for data intensive projects. It is focussed on projects using pytorch DNNs. 
 
 ## Generated Project Structure
