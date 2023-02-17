@@ -16,11 +16,11 @@ submodules as arguments. This way the pipeline can be used with different submod
 which increases modularity.
 Somteimes it might be useful to have a subpipeline that is used in multiple pipelines.
 This subpipeline will output an intermediate result that is used in multiple pipelines
-but not the final result. Therefore this pipeline should not inherit from PreprocessorBase.
-Keep in mind that you need to manage the intermediate result of the subpipeline yourself.
+but not the final result. Keep in mind that you need to manage the intermediate result 
+of the subpipeline yourself.
 Also it might be usefule to have further pipelines which process the result further.
 These pipelines might take an ResultBase as input and process it further with more
-information etc. These pipelines should NOT inherit from PreprocessorBase.
+information etc.
 """
 
 from abc import ABC, abstractmethod
@@ -38,10 +38,7 @@ from . import custom_transforms as CT
 class PostprocessorBase(ABC):
     def __init__(self):
         super().__init__()
-
-    @classmethod
-    def from_config(cls, config: Dict[str, Any]) -> "PostprocessorBase":
-        super().from_config(config, "postprocessing")
+        self.intermediate_results: Dict[str, Any] = {}
 
     @abstractmethod
     def __call__(self, network_output: TensorType) -> ResultBase:
