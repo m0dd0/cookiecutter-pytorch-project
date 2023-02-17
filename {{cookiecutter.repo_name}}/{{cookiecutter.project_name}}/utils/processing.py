@@ -3,76 +3,25 @@ to unify the full processing pipeline from input to output. IT however is not in
 to be used for exporting or visualization. Depending on the use case it might be
 useful to add more converters to the End2EndProcessor class.
 """
-
-from typing import Dict, Any, Callable
-import importlib
+from typing import Dict, Any, Callable, List, Tuple
 from copy import deepcopy
+from pathlib import Path
 
 import torch
+from matplotlib import pyplot as plt
+import yaml
 
-from {{cookiecutter.project_name}}.datatypes import DatasetSample
-from {{cookiecutter.project_name}}.preprocessing import PreprocessorBase, {{cookiecutter.dataset_name}}Preprocessor
-from {{cookiecutter.project_name}}.postprocessing import PostprocessorBase, Postprocessor
+
+from {{cookiecutter.project_name}}.dataloading.datasets import {{cookiecutter.dataset_name}}
+from {{cookiecutter.project_name}}.preprocessing import Preprocessor, PreprocessorBase
+from {{cookiecutter.project_name}}.postprocessing import Postprocessor, PostprocessorBase
 from {{cookiecutter.project_name}}.models import {{cookiecutter.model_name}}
+from {{cookiecutter.project_name}}.utils import visualization as vis
+from {{cookiecutter.project_name}}.utils.export import Exporter
+from {{cookiecutter.project_name}}.utils.config import module_from_config
 
 
 class End2EndProcessor:
-    @staticmethod
-    def check_model_path(model_path: Path) -> Path:
-        model_path = Path(model_path)
-        
-        if not model_path.exists():
-            model_path = Path(__file__).parent.parent / "checkpoints" / model_path
-        
-        if not model_path.exists():
-            raise FileNotFoundError(f"Model path {model_path} does not exist.")
-        
-        return model_path
-
-    @classmethod
-    def from_config(cls, config: Dict[str, Any]) -> "End2EndProcessor":
-        config = deepcopy(config)
-
-        # load the model
-        if "jit" in config["model"]:
-            jit_path = cls.check_model_path(config["model"].pop("jit"))
-            device = config["model"].pop("device", None)
-            
-            if len(config["model"]) > 0:
-                raise ValueError("If a jit model is used, only jit path and device can be specified. No other model parameters are allowed.")
-            
-            model = torch.jit.load(jit_path)
-            
-            if device is not None:
-                model = model.to(device)
-
-        else:
-            state_dict_path = cls.check_model_path(config["model"].pop("state_dict_path"))
-            model_cls = importlib.import_module(config["model"].pop("class"))
-            device = config["model"].pop("device", None)
-            model_args = config["model"]
-            model = model_cls.from_state_dict_path(state_dict_path, device, **model_args)
-
-        # load the preprocessor
-        preprocessor_cls = importlib.import_module(config["preprocessor"].pop("class"))
-        preprocessor = preprocessor_cls.from_config(config["preprocessor"])
-
-        # load the postprocessor
-        postprocessor_cls = importlib.import_module(config["postprocessor"].pop("class"))
-        postprocessor = postprocessor_cls.from_config(config["postprocessor"])
-
-        # more converters here
-        # ...
-
-        return cls(model=model, preprocessor=preprocessor, postprocessor=postprocessor)
-    
-    @classmethod
-    def from_yaml(cls, config_path: Path) -> "End2EndProcessor":
-        with open(config_path, "r") as f:
-            config = yaml.safe_load(f)
-
-        return cls.from_config(config)
-
     def __init__(
         self,
         model: {{cookiecutter.model_name}} = None,
@@ -80,32 +29,142 @@ class End2EndProcessor:
         postprocessor: PostprocessorBase = None,
         # more converters here
     ):
-        self.model = model or {{cookiecutter.model_name}}.from_state_dict_path()
+        """This is a utility class that combines the preprocessing, inference and
+        postprocessing steps into a single callable object. While executing the
+        different steps, it also collects intermediate results and stores them.
+        These results can be used for debugging or visualization purposes.
+        The input of the call is a list of samples, which are processed in a
+        batched manner. The output is a list of dictionaries, where each dictionary
+        contains the results of the processing steps for a single sample.
+        Note that this used no dataloader to since the dataloader is not
+        able to output the intermediate results in the preprocessing steps.
+        Therfore this module only is for evaluation and debugging purposes and not
+        for training.
 
-        self.preprocessor = preprocessor or {{cookiecutter.dataset_name}}Preprocessor
+        Args:
+            model (GenerativeResnet, optional): _description_. Defaults to None.
+            preprocessor (PreprocessorBase, optional): _description_. Defaults to None.
+            postprocessor (PostprocessorBase, optional): _description_. Defaults to None.
+        """
+        self.model = model or {{cookiecutter.model_name}}.from_jit()
+        self.preprocessor = preprocessor or Preprocessor()
         self.postprocessor = postprocessor or Postprocessor()
-
         # more converters here
 
-    def __call__(self, sample: DatasetSample) -> Dict[str, Any]:
+    def _batched_processing(
+        self, samples: List[Any], func: Callable
+    ) -> Tuple[List[Any], List[Dict[str, Any]]]:
+        """Takes a list of samples and a function and applies the function to
+        each sample in the list. The function is assumed to have an attribute
+        "intermediate_results" which is a dictionary containing the intermediate
+        results of the function. These results are collected and returned.
 
-        input_tensor = self.preprocessor(sample)
-        input_tensor = input_tensor.to(next(self.model.parameters()).device)
-        input_tensor = input_tensor.unsqueeze(0)
+        Args:
+            samples (List[Any]): The list of samples.
+            func (Callable): The function to be applied to each sample.
 
+        Returns:
+            Tuple[List[Any], List[Dict[str, Any]]]: The output of the function 
+            for each sample and the intermediate results.
+        """
+        output_batch = []
+        intermediate_results = []
+        for sample in samples:
+            output_batch.append(func(sample))
+            intermediate_results.append(deepcopy(func.intermediate_results))
+
+        return output_batch, intermediate_results
+
+    def __call__(self, samples: List[CameraData]) -> List[Dict[str, Any]]:
+        """The call method of the End2EndProcessor class. It takes a list of
+        samples and processes them in a batched manner. The intermediate results
+        are collected and returned.
+
+        Args:
+            samples (List[CameraData]): The list of samples.
+
+        Returns:
+            List[Dict[str, Any]]: A collection of intermediate results for each
+                sample and processing step.
+        """
+
+        # batched preprocessing
+        input_batch, preprocessor_results = self._batched_processing(
+            samples, self.preprocessor
+        )
+        input_batch = torch.stack(input_batch)
+
+        # batched inference
         with torch.no_grad():
-            model_output = self.model(input_tensor)
+            predictions_batch = self.model(input_batch)
 
-        result = self.postprocessor(model_output)
+        # batched postprocessing
+        postprocessed_batch, posprocessor_results = self._batched_processing(
+            predictions_batch, self.postprocessor
+        )
 
-        # further processing here with more converters here
+        # TODO: further postprocessing here
 
-        process_data = {
-            "preprocessor": self.preprocessor.intermediate_results,
-            "postprocessor": self.postprocessor.intermediate_results,
-            "model_input": input_tensor,
-            "sample": sample,
-            "result": result,
-        }
+        # batched data collection
+        process_data_batch = []
+        for i_sample in range(len(samples)):
+            process_data = {
+                "preprocessor": preprocessor_results[i_sample],
+                "postprocessor": posprocessor_results[i_sample],
+                "model_input": input_batch[i_sample],
+                "sample": samples[i_sample],
+                "postprocessed": postprocessed_batch[i_sample],
+            }
+            process_data_batch.append(process_data)
 
-        return process_data
+        return process_data_batch
+
+
+def process_dataset(
+    dataset: {{cookiecutter.dataset_name}},
+    e2e_processor: End2EndProcessor,
+    exporter: Exporter,
+    batch_size=10,
+):
+    for i_batch in range((len(dataset) // batch_size) + 1):
+        j_start = i_batch * batch_size
+        j_end = min((i_batch + 1) * batch_size, len(dataset))
+        batch = [dataset[j] for j in range(j_start, j_end)]
+        print(f"Processing samples {j_start}...{j_end-1}")
+
+        process_data_batch = e2e_processor(batch)
+
+        for process_data in process_data_batch:
+            fig = vis.overview_fig(
+                fig=plt.figure(figsize=(20, 20)),
+                # TODO more args here
+            )
+            plt.close(fig)
+
+            export_data = {
+                # "sample_attr": process_data["sample"].attr,
+                # "result_attr": process_data["postprocessed"].attr,
+                # more data here
+                "overview": fig,
+            }
+
+            _ = exporter(export_data, f"{process_data['sample'].name}")
+
+
+def process_{{cookiecutter.dataset_name}}(
+    dataset_path: Path, config_path: Path, export_path: Path, batch_size: int
+):
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    dataset = {{cookiecutter.dataset_name}}(dataset_path)
+
+    e2e_processor = module_from_config(config)
+
+    exporter = Exporter(export_dir=export_path)
+
+    export_path.mkdir(parents=True, exist_ok=True)
+    with open(export_path / "default_e2e_inference.yaml", "w") as f:
+        yaml.dump(config, f)
+
+    process_dataset(dataset, e2e_processor, exporter, batch_size)
