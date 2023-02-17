@@ -3,13 +3,16 @@ import subprocess
 
 subprocess.run(["git", "init"], check=True)
 subprocess.run(["git", "add", "*"], check=True)
-subprocess.run(["git", "add", "*"])
 subprocess.run(
-    ["git", "add", "-f", "{{cookiecutter.project_name}}/data/examples/.gitkeep"]
+    ["git", "add", "-f", "{{cookiecutter.project_name}}/data/examples/.gitkeep"],
+    check=True,
 )
-subprocess.run(["git", "add", "-f", "{{cookiecutter.project_name}}/data/raw/.gitkeep"])
 subprocess.run(
-    ["git", "add", "-f", "{{cookiecutter.project_name}}/data/results/.gitkeep"]
+    ["git", "add", "-f", "{{cookiecutter.project_name}}/data/raw/.gitkeep"], check=True
+)
+subprocess.run(
+    ["git", "add", "-f", "{{cookiecutter.project_name}}/data/results/.gitkeep"],
+    check=True,
 )
 subprocess.run(
     ["git", "commit", "-a", "-m", "Initial commit from cookiecutter template"],
