@@ -5,23 +5,9 @@ import torch.nn as nn
 from torchtyping import TensorType
 
 from .custom_modules import CustomModuleExample
+from .base import BaseModel
 
-
-class {{cookiecutter.model_name}}(nn.Module):
-    def from_state_dict_path(
-        cls, state_dict_path: Path = None, device: str = None, *args, **kwargs
-    ) -> "{{cookiecutter.model_name}}":
-        device = device or (
-            torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-        )
-        state_dict_path = state_dict_path or Path(__file__).parent.parent / "checkpoints" / "default_state_dict.pt"
-
-        model = cls(*args, **kwargs)
-        model.load_state_dict(torch.load(state_dict_path))
-        model.to(device)
-
-        return model
-
+class {{cookiecutter.model_name}}(BaseModel):
     def __init__(
             self, 
             # model_param_1, 
