@@ -1,5 +1,4 @@
 import subprocess
-import platform
 
 
 subprocess.run(["git", "init"], check=True)
@@ -12,7 +11,6 @@ subprocess.run(["git", "add", "-f", "{{cookiecutter.project_name}}/data/raw/.git
 subprocess.run(
     ["git", "add", "-f", "{{cookiecutter.project_name}}/data/results/.gitkeep"]
 )
-subprocess.run(["git", "add", "-f", "notebooks/00_experiments.ipynb"])
 subprocess.run(
     ["git", "commit", "-a", "-m", "Initial commit from cookiecutter template"],
     check=True,

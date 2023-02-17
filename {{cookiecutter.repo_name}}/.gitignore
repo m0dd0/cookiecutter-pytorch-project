@@ -1,5 +1,6 @@
 *.pyc
 __pycache__
+*.egg-info
 
 {{cookiecutter.project_name}}/data/*
 {{cookiecutter.project_name}}/checkpoints/*
