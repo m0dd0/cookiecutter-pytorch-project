@@ -3,4 +3,3 @@ __pycache__
 
 {{cookiecutter.project_name}}/data/*
 {{cookiecutter.project_name}}/checkpoints/*
-notebooks/00_experiments.ipynb
