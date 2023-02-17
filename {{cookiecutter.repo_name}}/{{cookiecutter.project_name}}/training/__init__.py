@@ -1,1 +1,1 @@
-# TODO: setup strucure for training
+from .training import *
