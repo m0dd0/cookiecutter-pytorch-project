@@ -13,6 +13,7 @@ import yaml
 
 
 from {{cookiecutter.project_name}}.dataloading.datasets import {{cookiecutter.dataset_name}}
+from {{cookiecutter.project_name}}.datatypes import {{cookiecutter.dataset_name}}Sample
 from {{cookiecutter.project_name}}.preprocessing import Preprocessor, PreprocessorBase
 from {{cookiecutter.project_name}}.postprocessing import Postprocessor, PostprocessorBase
 from {{cookiecutter.project_name}}.models import {{cookiecutter.model_name}}
@@ -75,13 +76,13 @@ class End2EndProcessor:
 
         return output_batch, intermediate_results
 
-    def __call__(self, samples: List[CameraData]) -> List[Dict[str, Any]]:
+    def __call__(self, samples: List[{{cookiecutter.dataset_name}}Sample]) -> List[Dict[str, Any]]:
         """The call method of the End2EndProcessor class. It takes a list of
         samples and processes them in a batched manner. The intermediate results
         are collected and returned.
 
         Args:
-            samples (List[CameraData]): The list of samples.
+            samples (List[{{cookiecutter.dataset_name}}Sample]): The list of samples.
 
         Returns:
             List[Dict[str, Any]]: A collection of intermediate results for each

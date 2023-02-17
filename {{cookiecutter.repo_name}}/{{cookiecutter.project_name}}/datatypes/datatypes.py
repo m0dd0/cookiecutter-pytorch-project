@@ -28,7 +28,7 @@ class {{cookiecutter.dataset_name}}Sample(DatasetSample):
 class ResultBase(ABC):
     pass
 
-@datclass
+@dataclass
 class SomeResult(ResultBase):
     attr1: ...
     attr2: ...

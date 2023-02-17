@@ -11,8 +11,8 @@ from typing import List
 from matplotlib import pyplot as plt
 import numpy as np
 
-from grconvnet.datatypes import ImageGrasp, RealGrasp
-from grconvnet.utils.geometry import get_antipodal_points
+from {{cookiecutter.project_name}}.datatypes import ImageGrasp, RealGrasp
+from {{cookiecutter.project_name}}.utils.geometry import get_antipodal_points
 
 
 def make_tensor_displayable(
