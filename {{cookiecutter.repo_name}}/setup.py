@@ -11,19 +11,18 @@ setuptools.setup(
     # url="",
     classifiers=["Programming Language :: Python :: 3"],
     packages=setuptools.find_packages(),
-    python_requires="==3.10",
-    # not specifying versions might result in pip downloading multiple versions
-    # of a package in order to solve dependencies
-    # therfore it might be useful to fix the versions someday
+    # we do not specify a python version here, since the venv is always created with the same python version
+    # as the one used to create the venv which might lead to errors during install
     install_requires=[
         "torch",
         "torchvision",
-        "numpy",
-        "nptyping",
         "torchtyping",
         "torchsummary",
         "tensorboardX",
+        "torchtyping",
         "Pillow",
+        "numpy",
+        "nptyping",
         "matplotlib",
         "pyyaml",
     ],

@@ -4,5 +4,10 @@
     "repo_name": "MyDataProject",
     "project_name": "my_data_project",
     "dataset_name": "MyDataset",
-    "model_name": "MyModel"
+    "model_name": "MyModel",
+    "remote_url": "",
+    "create_venv": [
+        "yes",
+        "no"
+    ]
 }
