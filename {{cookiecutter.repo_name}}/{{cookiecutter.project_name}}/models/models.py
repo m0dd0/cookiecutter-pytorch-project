@@ -14,10 +14,10 @@ class {{cookiecutter.model_name}}(nn.Module):
         device = device or (
             torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         )
-        model_path = model_path or Path(__file__).parent.parent / "checkpoints" / "default_state_dict.pt"
+        state_dict_path = state_dict_path or Path(__file__).parent.parent / "checkpoints" / "default_state_dict.pt"
 
         model = cls(*args, **kwargs)
-        model.load_state_dict(torch.load(model_path))
+        model.load_state_dict(torch.load(state_dict_path))
         model.to(device)
 
         return model

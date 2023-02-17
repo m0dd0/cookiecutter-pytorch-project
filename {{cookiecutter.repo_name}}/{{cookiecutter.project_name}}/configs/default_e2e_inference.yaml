@@ -1,7 +1,8 @@
+class: "{{cookiecutter.}}.utils.processing.End2EndProcessor"
 # when using jit models use:
 # model
 #   # path to the jit file, can be relative to the checkpoints folder
-#   jit: "/path/to/{{cookiecutter.repo_name}}/{{cookiecutter.project_name}}/checkoints/jit_model.ptc"
+#   jit_path: "/path/to/{{cookiecutter.repo_name}}/{{cookiecutter.project_name}}/checkoints/jit_model.ptc"
 #   device: "cuda" # device where the model is put on, optional
 
 # otherwise use

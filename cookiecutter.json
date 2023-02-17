@@ -1,7 +1,8 @@
 {
     "author": "Moritz Hesche",
     "email": "mo.hesche@gmail.com",
-    "project_name": "MyDataProject",
+    "repo_name": "MyDataProject",
+    "project_name": "my_data_project",
     "dataset_name": "MyDataset",
     "model_name": "MyModel"
 }
