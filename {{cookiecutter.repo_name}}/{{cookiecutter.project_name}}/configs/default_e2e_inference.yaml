@@ -1,21 +1,25 @@
-class: "{{cookiecutter.}}.utils.processing.End2EndProcessor"
-# when using jit models use:
-# model
-#   # path to the jit file, can be relative to the checkpoints folder
-#   jit_path: "/path/to/{{cookiecutter.repo_name}}/{{cookiecutter.project_name}}/checkoints/jit_model.ptc"
-#   device: "cuda" # device where the model is put on, optional
+# the config files are used with the utils.config.module_from_config function which 
+# simpy imports the class specified under the "class" keywords and calls it __init__
+# method with the other given arguments. If the "constructor" keyword is provided
+# the constructor class method is called instead of the __init__ method. 
+
+class: "{{cookiecutter.project_name}}.utils.processing.End2EndProcessor"
 
 # otherwise use
 model:
   # name of the class of the torch.nn module, must be importable from models module
   class: "{{cookiecutter.model_name}}" 
-  # path to the state dict of the module, can be relative to the checkpoints folder
+  # path to the state dict of the module, can be relative to the checkpoints folder optionally
   state_dict_path: "/path/to/{{cookiecutter.repo_name}}/{{cookiecutter.project_name}}/checkoints/default_state_dict.pt"
   # device where the model is put on, optional
   device: "cuda" 
   # parameters which are passed to the init method of the class
   # - model_param_1: 5 
   # - model_param_2: 15
+  # if you use a jitted model use:
+  # constructor: from_jit
+  # path to the jit file, can be relative to the checkpoints folder
+  # jit_path: "/path/to/{{cookiecutter.repo_name}}/{{cookiecutter.project_name}}/checkoints/jit_model.ptc"
 
 preprocessor:
   # name of the class of the preprocessor, must be importable from preprocessor module
