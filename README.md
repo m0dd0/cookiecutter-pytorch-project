@@ -3,37 +3,39 @@ This cookiecutter provides a template for data intensive projects. It is focusse
 
 ## Generated Project Structure
     {{cookiecutter.project_name}}
-    ├── {{cookiecutter.project_name}}/
-    │   ├── checkoints/
-    │   ├── data/
-    │   |   └── examples/
-    │   ├── dataloading/
-    │   |   └── datasets.py/
-    │   ├── datatypes/
-    │   |   └── datatypes.py/
-    │   ├── models/
-    │   |   ├── custom_modules.py/
-    │   |   └── models.py/
-    │   ├── postprocessing/
-    │   |   ├── custom_modules.py/
-    │   |   └── pipelines.py/
-    │   ├── preprocessing/
-    │   |   ├── custom_modules.py/
-    │   |   └── pipelines.py/
-    │   ├── results/
-    │   ├── training/
-    │   |   └── dataloaders.py/
-    │   └── utils/
-    │       ├── export.py/
-    │       ├── misc.py/
-    │       ├── processing.py/
-    │       └── visualization.py/
-    ├── notebooks/
-    │   └── 00_experiments.ipynb/
-    ├── .gitignore/
-    ├── setup.py/
-    ├── LICENSE/
-    └── README.md/
+    ├── {{cookiecutter.project_name}}
+    │   ├── checkoints
+    │   ├── data
+    │   |   ├── raw
+    │   |   ├── results
+    │   |   └── examples
+    │   ├── dataloading
+    │   |   └── datasets.py
+    │   ├── datatypes
+    │   |   └── datatypes.py
+    │   ├── models
+    │   |   ├── base.py
+    │   |   ├── custom_modules.py
+    │   |   └── models.py
+    │   ├── postprocessing
+    │   |   ├── custom_modules.py
+    │   |   └── pipelines.py
+    │   ├── preprocessing
+    │   |   ├── custom_modules.py
+    │   |   └── pipelines.py
+    │   ├── training
+    │   |   └── dataloaders.py
+    │   └── utils
+    │       ├── export.py
+    │       ├── misc.py
+    │       ├── processing.py
+    │       └── visualization.py
+    ├── notebooks
+    │   └── 00_experiments.ipynb
+    ├── .gitignore
+    ├── setup.py
+    ├── LICENSE
+    └── README.md
 
 ## Design Decisions
 TODO
