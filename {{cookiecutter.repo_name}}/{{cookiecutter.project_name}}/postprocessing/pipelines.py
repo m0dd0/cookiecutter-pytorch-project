@@ -25,6 +25,7 @@ information etc.
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict
+from collections import deque
 
 # from torchvision import transforms as T
 # import torch
@@ -38,7 +39,9 @@ from . import custom_transforms as CT
 class PostprocessorBase(ABC):
     def __init__(self):
         super().__init__()
-        self.intermediate_results: Dict[str, Any] = {}
+        self.intermediate_results: Iterable[Dict[str, Any]] = deque(
+            maxlen=intermediate_results_queue_size
+        )
 
     @abstractmethod
     def __call__(self, network_output: TensorType) -> ResultBase:
@@ -66,6 +69,9 @@ class Postprocessor(PostprocessorBase):
         # if self.example_submodule_2 is not None:
         #     x = self.example_submodule_2(x)
         # return x
+
+        # self.intermediate_results.append({})
+        # self.intermediate_results[-1]["value"] = value
         raise NotImplementedError()
 
 
