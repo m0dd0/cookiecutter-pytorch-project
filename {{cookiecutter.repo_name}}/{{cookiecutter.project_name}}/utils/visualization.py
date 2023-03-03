@@ -6,13 +6,8 @@ Try to use functions which operate on matplotlib.Axes objects as this makes it e
 to combine the different visualizations.
 """
 
-from typing import List
-
 from matplotlib import pyplot as plt
 import numpy as np
-
-from {{cookiecutter.project_name}}.utils.geometry import get_antipodal_points
-
 
 def make_tensor_displayable(
     tensor, convert_chw: bool = False, convert_to_int: bool = False
