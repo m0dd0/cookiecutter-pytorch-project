@@ -11,7 +11,6 @@ from typing import List
 from matplotlib import pyplot as plt
 import numpy as np
 
-from {{cookiecutter.project_name}}.datatypes import ImageGrasp, RealGrasp
 from {{cookiecutter.project_name}}.utils.geometry import get_antipodal_points
 
 

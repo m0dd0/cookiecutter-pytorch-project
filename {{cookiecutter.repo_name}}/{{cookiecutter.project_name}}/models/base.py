@@ -8,30 +8,28 @@ from pathlib import Path
 import torch
 import torch.nn as nn
 
+from grconvnet.utils.misc import get_root_dir, exists_in_subfolder
+
 
 class BaseModel(nn.Module, ABC):
-    @staticmethod
-    def check_model_path(model_path: Path) -> Path:
-        model_path = Path(model_path)
-
-        if not model_path.exists():
-            model_path = Path(__file__).parent.parent / "checkpoints" / model_path
-
-        if not model_path.exists():
-            raise FileNotFoundError(f"Model path {model_path} does not exist.")
-
-        return model_path
-
     @classmethod
-    def from_jit(cls, jit_path: Path = None, device: str = None) -> "BaseModel":
+    def from_jit(cls, jit_path: Path = None, device: str = None) -> "BasepModel":
         device = device or (
             torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         )
+        jit_path = (
+            jit_path
+            or "cornell-randsplit-rgbd-grconvnet3-drop1-ch32/epoch_15_iou_97.pt"
+        )
 
-        jit_path = jit_path or "path/to/the/default/jit/path.pth"
-        jit_path = cls.check_model_path(jit_path)
+        jit_path = exists_in_subfolder(jit_path, get_root_dir() / "checkpoints")
 
-        model = torch.jit.load(jit_path)
+        # we changed the jitted model class so we only take the state_dict
+        # the jitted model expects the default parameters
+        # normally we would simply return model=torch.jit.load(jit_path)
+        model = cls()
+        model.load_state_dict(torch.jit.load(jit_path).state_dict())
+
         model.to(device)
 
         return model
@@ -43,7 +41,9 @@ class BaseModel(nn.Module, ABC):
         device = device or (
             torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         )
-        state_dict_path = cls.check_model_path(state_dict_path)
+        state_dict_path = exists_in_subfolder(
+            state_dict_path, get_root_dir() / "checkpoints"
+        )
 
         model = cls(**kwargs)
         model.load_state_dict(torch.load(state_dict_path, map_location=device))
@@ -51,17 +51,6 @@ class BaseModel(nn.Module, ABC):
         model.to(device)
 
         return model
-
-    @classmethod
-    def from_config(cls, **kwargs) -> "BaseModel":
-        if "jit_path" in kwargs:
-            return cls.from_jit(**kwargs)
-
-        elif "state_dict_path" in kwargs:
-            return cls.from_state_dict_path(**kwargs)
-
-        else:
-            raise ValueError("No valid config for loading model.")
 
     # TODO define other methods here which might be shared by all models
     # e.g. save, load, error, ...
